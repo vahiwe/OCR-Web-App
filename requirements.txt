@@ -1,0 +1,7 @@
+flask
+pytesseract
+gunicorn
+tesseract
+spacy
+pillow
+pandas

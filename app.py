@@ -22,10 +22,10 @@ def ocr_core(filename):
 
 # allow files of a specific type
 ALLOWED_EXTENSIONS = set(['png', 'jpg', 'jpeg'])
-# UPLOAD_FOLDER = 'C:/uploads'
+UPLOAD_FOLDER = os.path.join(os.getcwd(), 'static')
 # UPLOAD_FOLDER = 'C:\Users\BUCHI\Documents\HNGIntership\HNG6\Task 8 scrape\gabby\OCRi\uplo'
 app = Flask(__name__)
-# app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 
@@ -56,8 +56,10 @@ def upload_file():
         msg = 'No file selected'
         return render_template("upload.html", msg=msg)
     if file and allowed_file(file.filename):
-        # filename = secure_filename(file.filename)
-        # file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        names = "static/" + filename
+        print(names)
         extracted_text = ocr_core(file)
         if extracted_text == '':
             extracted_text = "Sorry characters could not be clearly recognized"
@@ -69,7 +71,7 @@ def upload_file():
         # resp = jsonify({'extracted_text' : extracted_text})
         # resp.status_code = 200
         # return resp
-        return render_template("upload.html", extracted_text=extracted_text)
+        return render_template("upload.html", extracted_text=extracted_text, img_src=names)
     else:
         # resp = jsonify({'message' : 'Allowed file types are png, jpg, jpeg'})
         # resp.status_code = 400

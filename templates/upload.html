@@ -23,7 +23,9 @@
     </form>
 
     {% if img_src %}
-    <img src="{{ img_src }}">
+    <div>
+        <img src={{ img_src }} style="float: left; width: 48%; margin-right: 1%; margin-bottom: 0.5em;">
+    </div>
     {% endif %}
 
     {% if extracted_text %}

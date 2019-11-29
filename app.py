@@ -1,5 +1,6 @@
 import pytesseract as pt
 from PIL import Image
+import time
 import os
 import urllib.request
 from flask import Flask, request, redirect, jsonify, render_template
@@ -56,7 +57,10 @@ def upload_file():
         msg = 'No file selected'
         return render_template("upload.html", msg=msg)
     if file and allowed_file(file.filename):
-        filename = secure_filename(file.filename)
+        ext = file.filename.rsplit('.', 1)[1]
+        timestr = time.strftime("%Y%m%d-%H%M%S")
+        nam = timestr + "." + ext
+        filename = secure_filename(nam)
         file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         names = "static/" + filename
         print(names)
@@ -81,4 +85,4 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)

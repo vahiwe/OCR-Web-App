@@ -1,6 +1,7 @@
 import pytesseract as pt
 from PIL import Image
 import time
+import datetime
 import os
 import urllib.request
 from flask import Flask, request, redirect, jsonify, render_template
@@ -59,10 +60,16 @@ def upload_file():
     if file and allowed_file(file.filename):
         ext = file.filename.rsplit('.', 1)[1]
         timestr = time.strftime("%Y%m%d-%H%M%S")
+        today = datetime.date.today()
+        todaystr = today.isoformat()
         nam = timestr + "." + ext
         filename = secure_filename(nam)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        names = "static/" + filename
+        try:
+            os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], todaystr))
+        except:
+            pass
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], todaystr, filename))
+        names = "static/" + todaystr + "/" + filename
         print(names)
         extracted_text = ocr_core(file)
         if extracted_text == '':
